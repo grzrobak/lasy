@@ -4,8 +4,12 @@
     <string name="app_name">Lasy GPS</string>
     <string name="lbl_you_are_at">JESTEŚ W</string>
     <string name="btn_get_location">GET MY LOCATION</string>
-    <string name="btn_start_location_updates">START LOCATION UPDATES</string>
-    <string name="btn_stop_location_updates">STOP LOCATION UPDATES</string>
+    <string name="btn_start_location_updates">WYSZUKAJ ODDZIAŁ (TRYB CIĄGŁY)</string>
+    <string name="btn_stop_location_updates">WYSZUKAJ ODDZIAŁ</string>
     <string name="title_activity_maps">Map</string>
+    <string name="settings">Ustawienia</string>
+    <string name="constant_mode">Tryb ciągły</string>
+    <string name="constant_mode_desc">Po włączeniu tego trybu lokalizacja będzie sprawdzana co określony czas</string>
+    <string name="pref_time_interval">Odstęp czasowy dla trybu ciągłego</string>
 
 </resources>

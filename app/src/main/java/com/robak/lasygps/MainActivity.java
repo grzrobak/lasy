@@ -2,10 +2,19 @@ package com.robak.lasygps;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +31,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.robak.lasygps.domain.ForestData;
@@ -29,8 +39,8 @@ import com.robak.lasygps.domain.ForestData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity implements ConnectionCallbacks,
-        OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements ConnectionCallbacks,
+        OnConnectionFailedListener, LocationListener {
     // LogCat tag
     private static final String TAG = MainActivity.class.getSimpleName();
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
@@ -43,8 +53,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     private Location mLastLocation;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
-    // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
 
     private RequestQueue mRequestQueue;
 
@@ -102,7 +110,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                             updateDisplayedForestData(forestData);
                             Toast.makeText(getApplicationContext(), "Nie można pobrać niektórych danych", Toast.LENGTH_SHORT).show();
                         }
-                        //"adress_forest": "11-23-1-09-574   -b   -00"
                     }
                 },
                 new Response.ErrorListener() {
@@ -211,17 +218,14 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
 
         progressDialog = new ProgressDialog(this);
 
-        // First we need to check availability of play services
         if (checkPlayServices()) {
 
             // Building the GoogleApi client
             buildGoogleApiClient();
-
+            createLocationRequest();
 //335845.0148, 705044.3988
 
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-
-// Start the queue
             mRequestQueue.start();
         }
 
@@ -237,6 +241,74 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 displayLocation();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkPlayServices();
+        // Resuming the periodic location updates
+        if (mGoogleApiClient.isConnected() && isConstantMode()) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    /**
+     * Method to toggle periodic location updates
+     * */
+    private void togglePeriodicLocationUpdates() {
+        if (!isConstantMode()) {
+            // Changing the button text
+            btnSearch.setText(getString(R.string.btn_stop_location_updates));
+
+            // Starting the location updates
+            startLocationUpdates();
+
+            Log.d(TAG, "Periodic location updates started!");
+
+        } else {
+            // Changing the button text
+            btnSearch.setText(getString(R.string.btn_start_location_updates));
+
+            // Stopping the location updates
+            stopLocationUpdates();
+
+            Log.d(TAG, "Periodic location updates stopped!");
+        }
+    }
+
+    /**
+     * Creating location request object
+     * */
+    protected LocationRequest createLocationRequest() {
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(getUpdateInterval());
+        mLocationRequest.setFastestInterval(getUpdateInterval());
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT); // 10 meters
+        return mLocationRequest;
+    }
+
+    /**
+     * Starting the location updates
+     * */
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, createLocationRequest(), this);
+    }
+
+    /**
+     * Stopping location updates
+     */
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
     }
 
     /**
@@ -281,7 +353,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Toast.makeText(getApplicationContext(),
-                        "This device is not supported.", Toast.LENGTH_LONG)
+                        "To urządzenie nie jest wspierane przez tę aplikację.", Toast.LENGTH_LONG)
                         .show();
                 finish();
             }
@@ -304,13 +376,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         mGoogleApiClient.disconnect();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        checkPlayServices();
-    }
-
     /**
      * Google api callback methods
      */
@@ -322,12 +387,57 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
 
     @Override
     public void onConnected(Bundle bundle) {
+        if (isConstantMode()) {
+            startLocationUpdates();
+        }
+    }
 
+    private boolean isConstantMode()
+    {
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(SettingsActivity.KEY_CONSTANT_MODE, false);
+    }
+
+    private int getUpdateInterval()
+    {
+        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(SettingsActivity.KEY_TIME_INTERVAL, "5"));
     }
 
     @Override
     public void onConnectionSuspended(int arg0) {
         mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // Assign the new location
+        mLastLocation = location;
+
+        Toast.makeText(getApplicationContext(), "Location changed! " + getUpdateInterval(),
+                Toast.LENGTH_SHORT).show();
+
+        // Displaying the new location on UI
+        displayLocation();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

@@ -313,9 +313,7 @@
             android:background="#3e4a56"
             android:textColor="#FFF"
             android:layout_gravity="bottom"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
 </LinearLayout>
