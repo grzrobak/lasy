@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Lasy GPS</string>
+    <string name="app_name">Mapa lasów</string>
     <string name="lbl_you_are_at">JESTEŚ W</string>
-    <string name="btn_get_location">GET MY LOCATION</string>
     <string name="btn_start_location_updates">WYSZUKAJ ODDZIAŁ (TRYB CIĄGŁY)</string>
     <string name="btn_stop_location_updates">WYSZUKAJ ODDZIAŁ</string>
     <string name="title_activity_maps">Map</string>
