@@ -1,4 +1,4 @@
-package com.robak.lasygps;
+package com.robak.lasygps.domain;
 
 /**
  * Created by Grzesiek on 19-09-2015.

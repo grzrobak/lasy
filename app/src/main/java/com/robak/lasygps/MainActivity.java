@@ -1,15 +1,11 @@
 package com.robak.lasygps;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +31,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.robak.lasygps.domain.ForestData;
+import com.robak.lasygps.domain.LesnictwoUrl;
+import com.robak.lasygps.domain.OddzialUrl;
 
 import org.json.JSONException;
 import org.json.JSONObject;

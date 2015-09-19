@@ -1,12 +1,10 @@
 package com.robak.lasygps;
 
-import android.app.Application;
-import android.test.ActivityUnitTestCase;
 import android.test.AndroidTestCase;
 
-import org.junit.Test;
+import com.robak.lasygps.domain.LesnictwoUrl;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Created by Grzesiek on 15-09-2015.

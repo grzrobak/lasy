@@ -1,4 +1,4 @@
-package com.robak.lasygps;
+package com.robak.lasygps.domain;
 
 import android.net.Uri;
 import android.os.Parcel;
