@@ -1,4 +1,4 @@
-package com.robak.lasygps.com.robak.lasygps.domain;
+package com.robak.lasygps.domain;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +8,7 @@ import org.json.JSONObject;
  */
 public class ForestData
 {
-    private String forestAddress;
+    private ForestAddress forestAddress;
 
     private String nadlesnictwo;
     private String lesnictwo;
@@ -23,9 +23,9 @@ public class ForestData
 
     public ForestData(JSONObject json) throws JSONException {
         JSONObject attributes = json.getJSONArray("features").getJSONObject(0).getJSONObject("attributes");
-        this.forestAddress = attributes.getString("adress_forest");
-        oddzial = forestAddress.split("-")[4].trim();
-        pododdzal = forestAddress.split("-")[5].trim();
+        this.forestAddress = new ForestAddress(attributes.getString("adress_forest"));
+        oddzial = forestAddress.getOddzial();
+        pododdzal = forestAddress.getPododdzial();
         areaSize = attributes.getString("sub_area");
         treeCode = attributes.getString("species_cd_d");
         treeAge = attributes.getString("species_age");
@@ -37,7 +37,7 @@ public class ForestData
         this.lesnictwo = lesnictwo.trim();
     }
 
-    public String getForestAddress() {
+    public ForestAddress getForestAddress() {
         return forestAddress;
     }
 

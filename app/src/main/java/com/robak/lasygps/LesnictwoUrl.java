@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
+import com.robak.lasygps.domain.ForestData;
+
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.List;
@@ -19,15 +21,14 @@ public class LesnictwoUrl
     private final String aYear;
     private final String forrestAddress;
 
-    public LesnictwoUrl(String arodesIntNum, String aYear, String forrestAddress) {
-        this.arodesIntNum = arodesIntNum;
-        this.aYear = aYear;
-        this.forrestAddress = forrestAddress;
+    public LesnictwoUrl(ForestData forestData) {
+        this.arodesIntNum = forestData.getArodes_int_num();
+        this.aYear = forestData.getDataAge();
+        this.forrestAddress = forestData.getForestAddress().getRawValue();
     }
 
     public String getUrl()
     {
-//        return Uri.parse(String.format(url,arodesIntNum,aYear,forrestAddress)).getEncodedQuery();
         return String.format(url,arodesIntNum,aYear,forrestAddress).replace(" ", "%20" );
     }
 }
