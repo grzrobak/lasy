@@ -9,7 +9,7 @@
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:rowCount="14"
+        android:rowCount="16"
         android:columnCount="2">
 
         <Space
@@ -87,13 +87,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtLesnictwo"
             android:layout_row="6"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,13 +111,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtOddzial"
             android:layout_row="7"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -135,13 +135,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtPododdzial"
             android:layout_row="8"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -159,13 +159,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtTreeCode"
             android:layout_row="10"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -183,13 +183,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtArea"
             android:layout_row="9"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -207,13 +207,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtTreeAge"
             android:layout_row="11"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -231,20 +231,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:id="@+id/errorText"
+            android:layout_row="14"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:textColor="#fcff00"
+            android:layout_gravity="center|fill"
+            android:gravity="center"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pbLoading"
+            android:layout_row="13"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_gravity="fill"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/txtDataAge"
             android:layout_row="12"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wyszukaj oddział"
             android:id="@+id/btnSearch"
-            android:layout_row="13"
+            android:layout_row="15"
             android:layout_column="0"
             android:layout_gravity="fill_horizontal|center_horizontal"
             android:layout_columnSpan="2"
@@ -255,13 +278,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/txtNadlesnictwo"
             android:layout_row="5"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal|center_horizontal"
-            android:gravity="center_horizontal"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:gravity="left"
+            android:visibility="invisible" />
 
     </GridLayout>
+
 </LinearLayout>

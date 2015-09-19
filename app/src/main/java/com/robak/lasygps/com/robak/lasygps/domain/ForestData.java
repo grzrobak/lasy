@@ -12,22 +12,41 @@ public class ForestData
 
     private String nadlesnictwo;
     private String lesnictwo;
-    private final int oddzial;
+    private final String oddzial;
     private final String pododdzal;
     private final String areaSize;
     private final String treeCode;
-    private final int treeAge;
-    private final int dataAge;
+    private final String treeAge;
+    private final String dataAge;
+
+    private final String arodes_int_num;
 
     public ForestData(JSONObject json) throws JSONException {
         JSONObject attributes = json.getJSONArray("features").getJSONObject(0).getJSONObject("attributes");
         this.forestAddress = attributes.getString("adress_forest");
-        oddzial = Integer.valueOf(forestAddress.split("-")[4]);
-        pododdzal = forestAddress.split("-")[5];
+        oddzial = forestAddress.split("-")[4].trim();
+        pododdzal = forestAddress.split("-")[5].trim();
         areaSize = attributes.getString("sub_area");
         treeCode = attributes.getString("species_cd_d");
-        treeAge = attributes.getInt("species_age");
-        dataAge = attributes.getInt("a_year");
+        treeAge = attributes.getString("species_age");
+        dataAge = attributes.getString("a_year");
+        arodes_int_num = attributes.getString("arodes_int_num");
+    }
+
+    public void setLesnictwo(String lesnictwo) {
+        this.lesnictwo = lesnictwo.trim();
+    }
+
+    public String getForestAddress() {
+        return forestAddress;
+    }
+
+    public String getLesnictwo() {
+        return lesnictwo;
+    }
+
+    public String getArodes_int_num() {
+        return arodes_int_num;
     }
 
     public String getNadlesnictwo() {
@@ -35,10 +54,10 @@ public class ForestData
     }
 
     public void setNadlesnictwo(String nadlesnictwo) {
-        this.nadlesnictwo = nadlesnictwo;
+        this.nadlesnictwo = nadlesnictwo.trim();
     }
 
-    public int getOddzial() {
+    public String getOddzial() {
         return oddzial;
     }
 
@@ -54,11 +73,11 @@ public class ForestData
         return treeCode;
     }
 
-    public int getTreeAge() {
+    public String getTreeAge() {
         return treeAge;
     }
 
-    public int getDataAge() {
+    public String getDataAge() {
         return dataAge;
     }
 
