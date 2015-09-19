@@ -6,286 +6,316 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:rowCount="16"
-        android:columnCount="2">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <Space
-            android:layout_width="20px"
-            android:layout_height="20px"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_columnSpan="2" />
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollView2"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentEnd="false"
+            android:layout_marginBottom="45dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="JESTEŚ W"
-            android:id="@+id/lblYouAreAt"
-            android:layout_column="0"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_row="3"
-            android:layout_columnSpan="2"
-            android:textAlignment="center"
-            android:singleLine="true"
-            android:gravity="center" />
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:rowCount="18"
+                android:columnCount="2">
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/imageView"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:src="@drawable/marker"
-            android:layout_columnSpan="2"
-            android:layout_gravity="center_horizontal" />
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
 
-        <Space
-            android:layout_width="20px"
-            android:layout_height="20px"
-            android:layout_row="2"
-            android:layout_column="0"
-            android:layout_columnSpan="2" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="JESTEŚ W"
+                    android:id="@+id/lblYouAreAt"
+                    android:layout_column="0"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_row="3"
+                    android:layout_columnSpan="2"
+                    android:textAlignment="center"
+                    android:singleLine="true"
+                    android:gravity="center" />
 
-        <Space
-            android:layout_width="20px"
-            android:layout_height="20px"
-            android:layout_row="4"
-            android:layout_column="0"
-            android:layout_columnSpan="2" />
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:id="@+id/imageView"
+                    android:layout_row="1"
+                    android:layout_column="0"
+                    android:src="@drawable/marker"
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Nadleśnictwo:"
-            android:id="@+id/lblNadlesnictwo"
-            android:layout_row="5"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="2"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Leśnictwo:"
-            android:id="@+id/lblLesnictwo"
-            android:layout_row="6"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="4"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtLesnictwo"
-            android:layout_row="6"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Nadleśnictwo:"
+                    android:id="@+id/lblNadlesnictwo"
+                    android:layout_row="5"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Oddział:"
-            android:id="@+id/lblOddzial"
-            android:layout_row="7"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Leśnictwo:"
+                    android:id="@+id/lblLesnictwo"
+                    android:layout_row="6"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtOddzial"
-            android:layout_row="7"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtLesnictwo"
+                    android:layout_row="6"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Pododdział:"
-            android:id="@+id/lblPododdzial"
-            android:layout_row="8"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Oddział:"
+                    android:id="@+id/lblOddzial"
+                    android:layout_row="7"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtPododdzial"
-            android:layout_row="8"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtOddzial"
+                    android:layout_row="7"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Zajmowany obszar:"
-            android:id="@+id/lblArea"
-            android:layout_row="9"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Pododdział:"
+                    android:id="@+id/lblPododdzial"
+                    android:layout_row="8"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtTreeCode"
-            android:layout_row="10"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtPododdzial"
+                    android:layout_row="8"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Wiek drzew:"
-            android:id="@+id/lblTreeAge"
-            android:layout_row="11"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Zajmowany obszar:"
+                    android:id="@+id/lblArea"
+                    android:layout_row="9"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtArea"
-            android:layout_row="9"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtTreeCode"
+                    android:layout_row="10"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Kod gatunku:"
-            android:id="@+id/lblTreeCode"
-            android:layout_row="10"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Wiek drzew:"
+                    android:id="@+id/lblTreeAge"
+                    android:layout_row="11"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtTreeAge"
-            android:layout_row="11"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtArea"
+                    android:layout_row="9"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Dane z roku:"
-            android:id="@+id/lblDataAge"
-            android:layout_row="12"
-            android:layout_column="0"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="right" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Kod gatunku:"
+                    android:id="@+id/lblTreeCode"
+                    android:layout_row="10"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/errorText"
-            android:layout_row="14"
-            android:layout_column="0"
-            android:layout_columnSpan="2"
-            android:textColor="#fcff00"
-            android:layout_gravity="center|fill"
-            android:gravity="center"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtTreeAge"
+                    android:layout_row="11"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pbLoading"
-            android:layout_row="13"
-            android:layout_column="0"
-            android:layout_columnSpan="2"
-            android:layout_gravity="fill"
-            android:visibility="invisible" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Dane z roku:"
+                    android:id="@+id/lblDataAge"
+                    android:layout_row="12"
+                    android:layout_column="0"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtDataAge"
-            android:layout_row="12"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|top|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="13"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
+
+                <Space
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_row="14"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/errorText"
+                    android:layout_row="15"
+                    android:layout_column="0"
+                    android:layout_columnSpan="2"
+                    android:textColor="#fcff00"
+                    android:layout_gravity="center|fill"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:layout_rowSpan="3" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtDataAge"
+                    android:layout_row="12"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|top|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/txtNadlesnictwo"
+                    android:layout_row="5"
+                    android:layout_column="1"
+                    android:layout_gravity="fill_horizontal|center_horizontal"
+                    android:textColor="#FFFFFF"
+                    android:gravity="left"
+                    android:visibility="invisible"
+                    android:paddingLeft="5dp" />
+
+            </GridLayout>
+        </ScrollView>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Wyszukaj oddział"
             android:id="@+id/btnSearch"
             android:layout_row="15"
             android:layout_column="0"
-            android:layout_gravity="fill_horizontal|center_horizontal"
             android:layout_columnSpan="2"
             android:background="#3e4a56"
-            android:textColor="#FFF" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/txtNadlesnictwo"
-            android:layout_row="5"
-            android:layout_column="1"
-            android:layout_gravity="fill_horizontal|center_horizontal"
-            android:textColor="#FFFFFF"
-            android:gravity="left"
-            android:visibility="invisible" />
-
-    </GridLayout>
+            android:textColor="#FFF"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </LinearLayout>

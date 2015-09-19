@@ -4,12 +4,12 @@ import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -20,15 +20,12 @@ import com.google.android.gms.location.LocationServices;
 import com.robak.lasygps.com.robak.lasygps.domain.ForestData;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,11 +33,6 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends Activity implements ConnectionCallbacks,
         OnConnectionFailedListener {
@@ -58,7 +50,6 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     private boolean mRequestingLocationUpdates = false;
 
     private LocationRequest mLocationRequest;
-
     private RequestQueue mRequestQueue;
 
     // Location updates intervals in sec
@@ -81,13 +72,13 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
 
     private LesnictwoUrl lesnictwoUrl;
 
-    private ProgressBar pb;
+    private ProgressDialog progressDialog;
     private ForestData forestData;
 
     private void getOddzial(final String latitude, final String longitude) {
 
         mRequestQueue.cancelAll("abc");
-        final String latitudeMock = "16.48363497723";
+        final String latitudeMock = "16000.48363497723";
         final String longitudeMock = "54.183357627217";
 
         String urlOddzial = "http://mapserver.bdl.lasy.gov.pl/arcgis/rest/services/BDL_2_0/MapServer/16/query?where=&text=&objectIds=&time=&geometry="+ latitudeMock + "%2C+" + longitudeMock +"&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=subarea_id%2C+arodes_int_num%2C+adress_forest%2C+area_type_cd%2C+site_type_cd%2C+silviculture_cd%2C+forest_func_cd%2C+stand_struct_cd%2C+rotation_age%2C+sub_area%2C+prot_category_cd%2C+species_cd_d%2C+part_cd%2C+species_age%2C+a_year&returnGeometry=false&maxAllowableOffset=&geometryPrecision=&outSR=4326&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&f=pjson";
@@ -95,14 +86,9 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
 
         JsonObjectRequest oddzialJsonRequest = getOddzialJsonRequest(urlOddzial);
         oddzialJsonRequest.setTag("abc");
-        oddzialJsonRequest.setRetryPolicy(new DefaultRetryPolicy(30000,3,1.0F));
+        oddzialJsonRequest.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
 
-
-
-        // Add the request to the RequestQueue.
-        System.out.println("Pytanie do mapServer");
         mRequestQueue.add(oddzialJsonRequest);
-
     }
 
     @NonNull
@@ -120,21 +106,18 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                             forestData.setLesnictwo(lesnictwo);
                             forestData.setNadlesnictwo(nadlesnictwo);
                             updateDisplayedForestData(forestData);
-                            pb.setVisibility(ProgressBar.INVISIBLE);
+                            progressDialog.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         //"adress_forest": "11-23-1-09-574   -b   -00"
-                        System.out.println(response.toString());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.getMessage());
-                        System.out.println(error.getCause());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        pb.setVisibility(ProgressBar.INVISIBLE);
+                        progressDialog.dismiss();
                     }
                 });
     }
@@ -151,19 +134,37 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
                 try {
                     forestData = new ForestData(response);
 
-                    updateDisplayedForestData(forestData);
-
                     lesnictwoUrl = new LesnictwoUrl(forestData.getArodes_int_num(),
                             forestData.getDataAge(),
                             forestData.getForestAddress());
-                    System.out.println("Pytanie o Leśnictwo");
 
                     JsonObjectRequest lesnictwoJsonRequest = getLesnictwolJsonRequest(lesnictwoUrl.getUrl());
                     lesnictwoJsonRequest.setTag("abc");
                     lesnictwoJsonRequest.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
                     mRequestQueue.add(lesnictwoJsonRequest);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    progressDialog.dismiss();
+                    txtErrorText.setText("Aktualna pozycja nie znajduje się w rejestrze Banku Danych o Lasach.\n\nPonów wyszukiwanie w innym miejscu.\ntest\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test\n" +
+                            "test123");
                 }
                 //"adress_forest": "11-23-1-09-574   -b   -00"
 
@@ -172,10 +173,8 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println(error.getMessage());
-                System.out.println(error.getCause());
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                pb.setVisibility(ProgressBar.INVISIBLE);
+                progressDialog.dismiss();
             }
         });
     }
@@ -237,21 +236,17 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
         txtErrorText = (TextView) findViewById(R.id.errorText);
         btnSearch = (Button) findViewById(R.id.btnSearch);
 
-        pb = (ProgressBar) findViewById(R.id.pbLoading);
+        progressDialog = new ProgressDialog(this);
 
         // First we need to check availability of play services
         if (checkPlayServices()) {
 
             // Building the GoogleApi client
             buildGoogleApiClient();
-            // Instantiate the cache
-            Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
 
-// Set up the network to use HttpURLConnection as the HTTP client.
-            BasicNetwork network = new BasicNetwork(new HurlStack());
 //335845.0148, 705044.3988
-// Instantiate the RequestQueue with the cache and network.
-            mRequestQueue = new RequestQueue(cache, network);
+
+            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 
 // Start the queue
             mRequestQueue.start();
@@ -263,7 +258,9 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
             @Override
             public void onClick(View v) {
                 clearDisplayedForestData();
-                pb.setVisibility(ProgressBar.VISIBLE);
+                progressDialog.setMessage("Szukam");
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
                 displayLocation();
             }
         });
@@ -275,7 +272,7 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     private void displayLocation() {
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        
+
         if (mLastLocation != null) {
             double latitude = mLastLocation.getLatitude();
             double longitude = mLastLocation.getLongitude();
@@ -329,6 +326,12 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -345,10 +348,8 @@ public class MainActivity extends Activity implements ConnectionCallbacks,
     }
 
     @Override
-    public void onConnected(Bundle arg0) {
+    public void onConnected(Bundle bundle) {
 
-        // Once connected with google api, get the location
-        // displayLocation();
     }
 
     @Override
