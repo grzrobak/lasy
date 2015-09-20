@@ -105,7 +105,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -130,7 +130,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -155,7 +155,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -180,7 +180,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -205,7 +205,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -230,7 +230,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -283,7 +283,7 @@
                     android:layout_gravity="fill_horizontal|top|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
                 <TextView
@@ -296,7 +296,7 @@
                     android:layout_gravity="fill_horizontal|center_horizontal"
                     android:textColor="#FFFFFF"
                     android:gravity="left"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:paddingLeft="5dp" />
 
             </GridLayout>

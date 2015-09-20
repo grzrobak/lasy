@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AndroidException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,13 +44,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private static final String TAG = MainActivity.class.getSimpleName();
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
-    // Location updates intervals in sec
-    private final static int DISPLACEMENT = 10; // 10 meters
-
-    private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
-
-    private RequestQueue mRequestQueue;
 
     // UI elements
     private TextView txtNadlesnictwo;
@@ -64,174 +59,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private Button btnSearch;
 
     private ProgressDialog progressDialog;
-    private ForestData forestData;
+    private DataLayer dataLayer;
+    private LocationService location;
 
-    private void getForestDataAt(String latitude, String longitude) {
-        
-//      used for testing purposes:
-//      String latitudeMock = "16.48363497723";
-//      String longitudeMock = "54.183357627217";
-//      latitude = latitudeMock;
-//      longitude = longitudeMock;
-
-        mRequestQueue.cancelAll(TAG);
-
-        DivisionUrl divisionUrl = new DivisionUrl(latitude, longitude);
-        
-        JsonObjectRequest divisionJsonRequest = getLpDivisionJsonRequest(divisionUrl);
-        Log.d(TAG, divisionJsonRequest.getUrl());
-        mRequestQueue.add(divisionJsonRequest);
-    }
-
-    @NonNull
-    private JsonObjectRequest getLpDivisionJsonRequest(final DivisionUrl url) {
-        JsonObjectRequest request = new JsonObjectRequest( url.getLpUrl(), new JSONObject(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            forestData = new ForestData(response);
-
-                            InspectorateUrl inspectorateUrl = new InspectorateUrl(forestData);
-
-                            JsonObjectRequest forestryJsonRequest = getLesnictwolJsonRequest(inspectorateUrl.getUrl());
-                            forestryJsonRequest.setTag(TAG);
-                            forestryJsonRequest.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
-                            mRequestQueue.add(forestryJsonRequest);
-                        } catch (JSONException e) {
-                            JsonObjectRequest notLpDivisionJsonRequest = getNotLpDivisionJsonRequest(url);
-                            Log.d(TAG, notLpDivisionJsonRequest.getUrl());
-                            mRequestQueue.add(notLpDivisionJsonRequest);
-                        }
-                        //"adress_forest": "11-23-1-09-574   -b   -00"
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                });
-
-        request.setTag(TAG);
-        request.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
-
-        return request;
-    }
-
-    @NonNull
-    private JsonObjectRequest getNotLpDivisionJsonRequest(DivisionUrl url) {
-        JsonObjectRequest request = new JsonObjectRequest( url.getNotLpUrl(), new JSONObject(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            forestData = new ForestData(response);
-
-                            InspectorateUrl inspectorateUrl = new InspectorateUrl(forestData);
-                            JsonObjectRequest lesnictwoJsonRequest = getLesnictwolJsonRequest(inspectorateUrl.getUrl());
-                            mRequestQueue.add(lesnictwoJsonRequest);
-
-                        } catch (JSONException e) {
-                            progressDialog.dismiss();
-                            txtErrorText.setText("Aktualna pozycja nie znajduje się w rejestrze Banku Danych o Lasach." +
-                                    "\n\nPonów wyszukiwanie w innym miejscu.");
-                        }
-                        //"adress_forest": "11-23-1-09-574   -b   -00"
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                });
-
-        request.setTag(TAG);
-        request.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
-
-        return request;
-    }
-
-    @NonNull
-    private JsonObjectRequest getLesnictwolJsonRequest(String url) {
-        JsonObjectRequest request =  new JsonObjectRequest( url, new JSONObject(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            String lesnictwo = response.getJSONArray("headerLP").getJSONObject(0).getString("forest_range_name");
-                            String nadlesnictwo = response.getJSONArray("headerLP").getJSONObject(0).getString("inspectorate_name");
-                            forestData.setForestry(lesnictwo);
-                            forestData.setInspectorate(nadlesnictwo);
-                            updateDisplayedForestData(forestData);
-                            progressDialog.dismiss();
-                        } catch (JSONException e) {
-                            progressDialog.dismiss();
-                            updateDisplayedForestData(forestData);
-                            Toast.makeText(getApplicationContext(), "Nie można pobrać niektórych danych", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
-                });
-
-        request.setTag(TAG);
-        request.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
-
-        return request;
-    }
-
-    private void clearDisplayedForestData()
-    {
-        txtNadlesnictwo.setText("");
-        txtNadlesnictwo.setVisibility(TextView.INVISIBLE);
-        txtLesnictwo.setText("");
-        txtLesnictwo.setVisibility(TextView.INVISIBLE);
-        txtOddzial.setText("");
-        txtOddzial.setVisibility(TextView.INVISIBLE);
-        txtPododzial.setText("");
-        txtPododzial.setVisibility(TextView.INVISIBLE);
-        txtArea.setText("");
-        txtArea.setVisibility(TextView.INVISIBLE);
-        txtTreeCode.setText("");
-        txtTreeCode.setVisibility(TextView.INVISIBLE);
-        txtTreeAge.setText("");
-        txtTreeAge.setVisibility(TextView.INVISIBLE);
-        txtDataAge.setText("");
-        txtDataAge.setVisibility(TextView.INVISIBLE);
-    }
-
-    private void updateDisplayedForestData(ForestData forestData) {
-        if(forestData.getInspectorate() != null && forestData.getForestry() != null) {
-            txtNadlesnictwo.setText(forestData.getInspectorate());
-            txtNadlesnictwo.setVisibility(TextView.VISIBLE);
-            txtLesnictwo.setText(forestData.getForestry());
-            txtLesnictwo.setVisibility(TextView.VISIBLE);
-        }
-        txtOddzial.setText(forestData.getDivision());
-        txtOddzial.setVisibility(TextView.VISIBLE);
-        txtPododzial.setText(forestData.getSubdivision());
-        txtPododzial.setVisibility(TextView.VISIBLE);
-        txtArea.setText(forestData.getAreaSize());
-        txtArea.setVisibility(TextView.VISIBLE);
-        txtTreeCode.setText(forestData.getTreeCode());
-        txtTreeCode.setVisibility(TextView.VISIBLE);
-        txtTreeAge.setText(forestData.getTreeAge());
-        txtTreeAge.setVisibility(TextView.VISIBLE);
-        txtDataAge.setText(forestData.getDataAge());
-        txtDataAge.setVisibility(TextView.VISIBLE);
-    }
+    //335845.0148, 705044.3988
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,16 +81,18 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         btnSearch = (Button) findViewById(R.id.btnSearch);
 
         progressDialog = new ProgressDialog(this);
+        dataLayer = new DataLayer(getApplicationContext(), new DataLayer.Callback<String>() {
+            @Override
+            public void apply(String errorMessage) {
+                progressDialog.dismiss();
+                txtErrorText.setText(errorMessage);
+                Log.d(TAG, errorMessage);
+            }
+        });
 
         if (checkPlayServices()) {
-
-            // Building the GoogleApi client
-            buildGoogleApiClient();
-            createLocationRequest();
-//335845.0148, 705044.3988
-
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-            mRequestQueue.start();
+            mGoogleApiClient = buildGoogleApiClient();
+            location = new LocationService(getApplicationContext(), mGoogleApiClient);
         }
 
         // Show location button click listener
@@ -271,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                 progressDialog.setMessage("Szukam");
                 progressDialog.setIndeterminate(true);
                 progressDialog.show();
-                displayLocation();
+                displayLocation( location.getLastLocation() );
             }
         });
     }
@@ -280,96 +113,59 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-        // Resuming the periodic location updates
+
         if (mGoogleApiClient.isConnected() && isConstantMode()) {
-            startLocationUpdates();
+            location.startLocationUpdates(this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        location.stopLocationUpdates(this);
     }
 
-    /**
-     * Method to toggle periodic location updates
-     * */
-    private void togglePeriodicLocationUpdates() {
-        if (!isConstantMode()) {
-            // Changing the button text
-            btnSearch.setText(getString(R.string.btn_stop_location_updates));
 
-            // Starting the location updates
-            startLocationUpdates();
-
-            Log.d(TAG, "Periodic location updates started!");
-
-        } else {
-            // Changing the button text
-            btnSearch.setText(getString(R.string.btn_start_location_updates));
-
-            // Stopping the location updates
-            stopLocationUpdates();
-
-            Log.d(TAG, "Periodic location updates stopped!");
-        }
+    private void startPeriodicLocationUpdates() {
+        btnSearch.setText(getString(R.string.btn_start_location_updates));
+        location.startLocationUpdates(this);
     }
 
-    /**
-     * Creating location request object
-     * */
-    protected LocationRequest createLocationRequest() {
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(getUpdateInterval());
-        mLocationRequest.setFastestInterval(getUpdateInterval());
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT); // 10 meters
-        return mLocationRequest;
-    }
-
-    /**
-     * Starting the location updates
-     * */
-    protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, createLocationRequest(), this);
-    }
-
-    /**
-     * Stopping location updates
-     */
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
+    private void stopPeriodicLocationUpdates() {
+        btnSearch.setText(getString(R.string.btn_stop_location_updates));
+        location.stopLocationUpdates(this);
     }
 
     /**
      * Method to display the location on UI
      * */
-    private void displayLocation() {
+    private void displayLocation(Location currentLocation) {
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (mLastLocation != null) {
-            double latitude = mLastLocation.getLatitude();
-            double longitude = mLastLocation.getLongitude();
+        if (currentLocation != null) {
+            double latitude = currentLocation.getLatitude();
+            double longitude = currentLocation.getLongitude();
 
             txtErrorText.setText("");
-            getForestDataAt(String.valueOf(latitude), String.valueOf(longitude));
+            DataLayer.Callback<ForestData> callback = new DataLayer.Callback<ForestData>() {
+                @Override
+                public void apply(ForestData forestData) {
+                    updateDisplayedForestData(forestData);
+                }
+            };
 
+            dataLayer.getForestDataAt(String.valueOf(latitude), String.valueOf(longitude), callback);
         } else {
 
             txtErrorText
-                    .setText("UWAGA! \n(Nie można ustalić lokalizacji. Upewnij się, że lokalizacja jest odblokowana w urządzeniu)");
+                    .setText("UWAGA! \n(Nie można ustalić lokalizacji. Upewnij się, że usługi lokalizacji są uruchomione w urządzeniu)");
         }
     }
 
     /**
      * Creating google api client object
      * */
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+    protected synchronized GoogleApiClient buildGoogleApiClient() {
+        return new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API).build();
@@ -410,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
     /**
-     * Google api callback methods
+     * Google api forestDataCallback methods
      */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
@@ -421,18 +217,19 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     @Override
     public void onConnected(Bundle bundle) {
         if (isConstantMode()) {
-            startLocationUpdates();
+            startPeriodicLocationUpdates();
+        }
+        else
+        {
+            stopPeriodicLocationUpdates();
         }
     }
 
     private boolean isConstantMode()
     {
-        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(SettingsActivity.KEY_CONSTANT_MODE, false);
-    }
-
-    private int getUpdateInterval()
-    {
-        return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(SettingsActivity.KEY_TIME_INTERVAL, "5"));
+        return PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext())
+                .getBoolean(SettingsActivity.KEY_CONSTANT_MODE, false);
     }
 
     @Override
@@ -442,19 +239,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        // Assign the new location
-        mLastLocation = location;
-
-        Toast.makeText(getApplicationContext(), "Location changed! " + getUpdateInterval(),
-                Toast.LENGTH_SHORT).show();
-
-        // Displaying the new location on UI
-        displayLocation();
+        Toast.makeText(getApplicationContext(), "Szukam", Toast.LENGTH_SHORT).show();
+        displayLocation(location);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_actions, menu);
         return super.onCreateOptionsMenu(menu);
@@ -462,15 +252,41 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.settings) {
+            openSettings();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void clearDisplayedForestData()
+    {
+        txtNadlesnictwo.setText("");
+        txtLesnictwo.setText("");
+        txtOddzial.setText("");
+        txtPododzial.setText("");
+        txtArea.setText("");
+        txtTreeCode.setText("");
+        txtTreeAge.setText("");
+        txtDataAge.setText("");
+    }
+
+    private void updateDisplayedForestData(ForestData forestData) {
+        if(forestData.getInspectorate() != null && forestData.getForestry() != null) {
+            txtNadlesnictwo.setText(forestData.getInspectorate());
+            txtLesnictwo.setText(forestData.getForestry());
+        }
+        txtOddzial.setText(forestData.getDivision());
+        txtPododzial.setText(forestData.getSubdivision());
+        txtArea.setText(forestData.getAreaSize());
+        txtTreeCode.setText(forestData.getTreeCode());
+        txtTreeAge.setText(forestData.getTreeAge());
+        txtDataAge.setText(forestData.getDataAge());
     }
 
 }
