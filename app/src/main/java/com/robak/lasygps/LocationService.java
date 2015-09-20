@@ -2,15 +2,9 @@ package com.robak.lasygps;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.AndroidException;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
