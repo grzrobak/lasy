@@ -31,8 +31,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.robak.lasygps.domain.ForestData;
-import com.robak.lasygps.domain.LesnictwoUrl;
-import com.robak.lasygps.domain.OddzialUrl;
+import com.robak.lasygps.domain.InspectorateUrl;
+import com.robak.lasygps.domain.DivisionUrl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,12 +44,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
     // Location updates intervals in sec
-    private final static int UPDATE_INTERVAL = 10000; // 10 sec
-    private final static int FATEST_INTERVAL = 5000; // 5 sec
     private final static int DISPLACEMENT = 10; // 10 meters
 
     private Location mLastLocation;
-    private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
 
     private RequestQueue mRequestQueue;
@@ -69,9 +66,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private ProgressDialog progressDialog;
     private ForestData forestData;
 
-    private void getOddzial( String latitude, String longitude) {
-
-        mRequestQueue.cancelAll(TAG);
+    private void getForestDataAt(String latitude, String longitude) {
         
 //      used for testing purposes:
 //      String latitudeMock = "16.48363497723";
@@ -79,35 +74,37 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 //      latitude = latitudeMock;
 //      longitude = longitudeMock;
 
-        OddzialUrl oddzialUrl = new OddzialUrl(latitude, longitude);
+        mRequestQueue.cancelAll(TAG);
+
+        DivisionUrl divisionUrl = new DivisionUrl(latitude, longitude);
         
-        JsonObjectRequest oddzialJsonRequest = getOddzialJsonRequest(oddzialUrl.getUrl());
-
-
-        mRequestQueue.add(oddzialJsonRequest);
+        JsonObjectRequest divisionJsonRequest = getLpDivisionJsonRequest(divisionUrl);
+        Log.d(TAG, divisionJsonRequest.getUrl());
+        mRequestQueue.add(divisionJsonRequest);
     }
 
     @NonNull
-    private JsonObjectRequest getLesnictwolJsonRequest(String url) {
-        JSONObject attrib = new JSONObject();
-
-        return new JsonObjectRequest( url, attrib,
+    private JsonObjectRequest getLpDivisionJsonRequest(final DivisionUrl url) {
+        JsonObjectRequest request = new JsonObjectRequest( url.getLpUrl(), new JSONObject(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 
                         try {
-                            String lesnictwo = response.getJSONArray("headerLP").getJSONObject(0).getString("forest_range_name");
-                            String nadlesnictwo = response.getJSONArray("headerLP").getJSONObject(0).getString("inspectorate_name");
-                            forestData.setLesnictwo(lesnictwo);
-                            forestData.setNadlesnictwo(nadlesnictwo);
-                            updateDisplayedForestData(forestData);
-                            progressDialog.dismiss();
+                            forestData = new ForestData(response);
+
+                            InspectorateUrl inspectorateUrl = new InspectorateUrl(forestData);
+
+                            JsonObjectRequest forestryJsonRequest = getLesnictwolJsonRequest(inspectorateUrl.getUrl());
+                            forestryJsonRequest.setTag(TAG);
+                            forestryJsonRequest.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
+                            mRequestQueue.add(forestryJsonRequest);
                         } catch (JSONException e) {
-                            progressDialog.dismiss();
-                            updateDisplayedForestData(forestData);
-                            Toast.makeText(getApplicationContext(), "Nie można pobrać niektórych danych", Toast.LENGTH_SHORT).show();
+                            JsonObjectRequest notLpDivisionJsonRequest = getNotLpDivisionJsonRequest(url);
+                            Log.d(TAG, notLpDivisionJsonRequest.getUrl());
+                            mRequestQueue.add(notLpDivisionJsonRequest);
                         }
+                        //"adress_forest": "11-23-1-09-574   -b   -00"
                     }
                 },
                 new Response.ErrorListener() {
@@ -117,11 +114,16 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                         progressDialog.dismiss();
                     }
                 });
+
+        request.setTag(TAG);
+        request.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
+
+        return request;
     }
 
     @NonNull
-    private JsonObjectRequest getOddzialJsonRequest(String url) {
-        JsonObjectRequest request = new JsonObjectRequest( url, new JSONObject(),
+    private JsonObjectRequest getNotLpDivisionJsonRequest(DivisionUrl url) {
+        JsonObjectRequest request = new JsonObjectRequest( url.getNotLpUrl(), new JSONObject(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -129,18 +131,51 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                         try {
                             forestData = new ForestData(response);
 
-                            LesnictwoUrl lesnictwoUrl = new LesnictwoUrl(forestData);
-
-                            JsonObjectRequest lesnictwoJsonRequest = getLesnictwolJsonRequest(lesnictwoUrl.getUrl());
-                            lesnictwoJsonRequest.setTag(TAG);
-                            lesnictwoJsonRequest.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
+                            InspectorateUrl inspectorateUrl = new InspectorateUrl(forestData);
+                            JsonObjectRequest lesnictwoJsonRequest = getLesnictwolJsonRequest(inspectorateUrl.getUrl());
                             mRequestQueue.add(lesnictwoJsonRequest);
+
                         } catch (JSONException e) {
                             progressDialog.dismiss();
                             txtErrorText.setText("Aktualna pozycja nie znajduje się w rejestrze Banku Danych o Lasach." +
                                     "\n\nPonów wyszukiwanie w innym miejscu.");
                         }
                         //"adress_forest": "11-23-1-09-574   -b   -00"
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                });
+
+        request.setTag(TAG);
+        request.setRetryPolicy(new DefaultRetryPolicy(30000, 3, 1.0F));
+
+        return request;
+    }
+
+    @NonNull
+    private JsonObjectRequest getLesnictwolJsonRequest(String url) {
+        JsonObjectRequest request =  new JsonObjectRequest( url, new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            String lesnictwo = response.getJSONArray("headerLP").getJSONObject(0).getString("forest_range_name");
+                            String nadlesnictwo = response.getJSONArray("headerLP").getJSONObject(0).getString("inspectorate_name");
+                            forestData.setForestry(lesnictwo);
+                            forestData.setInspectorate(nadlesnictwo);
+                            updateDisplayedForestData(forestData);
+                            progressDialog.dismiss();
+                        } catch (JSONException e) {
+                            progressDialog.dismiss();
+                            updateDisplayedForestData(forestData);
+                            Toast.makeText(getApplicationContext(), "Nie można pobrać niektórych danych", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -178,15 +213,15 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
     private void updateDisplayedForestData(ForestData forestData) {
-        if(forestData.getNadlesnictwo() != null && forestData.getLesnictwo() != null) {
-            txtNadlesnictwo.setText(forestData.getNadlesnictwo());
+        if(forestData.getInspectorate() != null && forestData.getForestry() != null) {
+            txtNadlesnictwo.setText(forestData.getInspectorate());
             txtNadlesnictwo.setVisibility(TextView.VISIBLE);
-            txtLesnictwo.setText(forestData.getLesnictwo());
+            txtLesnictwo.setText(forestData.getForestry());
             txtLesnictwo.setVisibility(TextView.VISIBLE);
         }
-        txtOddzial.setText(forestData.getOddzial());
+        txtOddzial.setText(forestData.getDivision());
         txtOddzial.setVisibility(TextView.VISIBLE);
-        txtPododzial.setText(forestData.getPododdzal());
+        txtPododzial.setText(forestData.getSubdivision());
         txtPododzial.setVisibility(TextView.VISIBLE);
         txtArea.setText(forestData.getAreaSize());
         txtArea.setVisibility(TextView.VISIBLE);
@@ -321,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             double longitude = mLastLocation.getLongitude();
 
             txtErrorText.setText("");
-            getOddzial(String.valueOf(latitude), String.valueOf(longitude));
+            getForestDataAt(String.valueOf(latitude), String.valueOf(longitude));
 
         } else {
 

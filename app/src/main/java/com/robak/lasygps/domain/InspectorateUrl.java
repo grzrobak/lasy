@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Grzesiek on 15-09-2015.
  */
-public class LesnictwoUrl
+public class InspectorateUrl
 {
     private final static String url = "http://www.bdl.lasy.gov.pl/portal/BULiGL.BDL.Reports/Report/StandDescriptionData?arodesIntNum=%s&aYear=%s&adress_forest=%s&jointOwnership=false";
 
@@ -21,7 +21,7 @@ public class LesnictwoUrl
     private final String aYear;
     private final String forrestAddress;
 
-    public LesnictwoUrl(ForestData forestData) {
+    public InspectorateUrl(ForestData forestData) {
         this.arodesIntNum = forestData.getArodes_int_num();
         this.aYear = forestData.getDataAge();
         this.forrestAddress = forestData.getForestAddress().getRawValue();

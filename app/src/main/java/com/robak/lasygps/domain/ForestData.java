@@ -10,10 +10,10 @@ public class ForestData
 {
     private ForestAddress forestAddress;
 
-    private String nadlesnictwo;
-    private String lesnictwo;
-    private final String oddzial;
-    private final String pododdzal;
+    private String inspectorate;
+    private String forestry;
+    private final String division;
+    private final String subdivision;
     private final String areaSize;
     private final String treeCode;
     private final String treeAge;
@@ -24,8 +24,8 @@ public class ForestData
     public ForestData(JSONObject json) throws JSONException {
         JSONObject attributes = json.getJSONArray("features").getJSONObject(0).getJSONObject("attributes");
         this.forestAddress = new ForestAddress(attributes.getString("adress_forest"));
-        oddzial = forestAddress.getOddzial();
-        pododdzal = forestAddress.getPododdzial();
+        division = forestAddress.getDivision();
+        subdivision = forestAddress.getSubdivison();
         areaSize = attributes.getString("sub_area");
         treeCode = attributes.getString("species_cd_d");
         treeAge = attributes.getString("species_age");
@@ -33,36 +33,36 @@ public class ForestData
         arodes_int_num = attributes.getString("arodes_int_num");
     }
 
-    public void setLesnictwo(String lesnictwo) {
-        this.lesnictwo = lesnictwo.trim();
+    public void setForestry(String forestry) {
+        this.forestry = forestry.trim();
     }
 
     public ForestAddress getForestAddress() {
         return forestAddress;
     }
 
-    public String getLesnictwo() {
-        return lesnictwo;
+    public String getForestry() {
+        return forestry;
     }
 
     public String getArodes_int_num() {
         return arodes_int_num;
     }
 
-    public String getNadlesnictwo() {
-        return nadlesnictwo;
+    public String getInspectorate() {
+        return inspectorate;
     }
 
-    public void setNadlesnictwo(String nadlesnictwo) {
-        this.nadlesnictwo = nadlesnictwo.trim();
+    public void setInspectorate(String inspectorate) {
+        this.inspectorate = inspectorate.trim();
     }
 
-    public String getOddzial() {
-        return oddzial;
+    public String getDivision() {
+        return division;
     }
 
-    public String getPododdzal() {
-        return pododdzal;
+    public String getSubdivision() {
+        return subdivision;
     }
 
     public String getAreaSize() {

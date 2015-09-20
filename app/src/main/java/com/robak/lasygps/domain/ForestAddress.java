@@ -8,8 +8,8 @@ public class ForestAddress
     private final String forestAddress;
     private final String[] distinctValues;
 
-    private final int ODDZIAL_INDEX;
-    private final int PODODDZIAL_INDEX;
+    private final int DIVISION_INDEX;
+    private final int SUBDIVISION_INDEX;
 
 
     public ForestAddress(String forestAddress) {
@@ -17,18 +17,18 @@ public class ForestAddress
         this.distinctValues = forestAddress.split("-");
 
         int lastIndex =  distinctValues.length - 1;
-        ODDZIAL_INDEX = lastIndex-2;
-        PODODDZIAL_INDEX = lastIndex-1;
+        DIVISION_INDEX = lastIndex-2;
+        SUBDIVISION_INDEX = lastIndex-1;
     }
 
-    public String getOddzial()
+    public String getDivision()
     {
-        return distinctValues[ODDZIAL_INDEX].trim();
+        return distinctValues[DIVISION_INDEX].trim();
     }
 
-    public String getPododdzial()
+    public String getSubdivison()
     {
-        return distinctValues[PODODDZIAL_INDEX].trim();
+        return distinctValues[SUBDIVISION_INDEX].trim();
     }
 
     public String getRawValue()
